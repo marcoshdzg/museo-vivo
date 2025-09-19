@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const iniciarBtn = document.getElementById('iniciar-dinamica');
     const dinamicaResult = document.getElementById('dinamica-result');
 
+    // Función para cargar recomendaciones
     async function cargarRecomendaciones() {
         try {
             const res = await fetch('https://museo-vivo-backend.marcos-a98.workers.dev/api/recomendaciones');
@@ -14,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     cargarRecomendaciones();
 
+    // Función para iniciar dinámica
     iniciarBtn.addEventListener('click', async () => {
         const tipo = document.getElementById('tipo-dinamica').value;
         try {
@@ -29,19 +31,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Ejemplo de guardar obra (botón manual por ahora)
+    // Función para guardar obra (activada por el botón "Crear")
     document.getElementById('crear').addEventListener('click', async () => {
-        const usuarioId = 'algún-id-de-usuario'; // Reemplazar con lógica real
+        const usuarioId = 'algún-id-de-usuario'; // Reemplazar con lógica real (e.g., logueo)
         const contenido = { titulo: 'Nueva Obra', desc: 'Creada ahora' };
         try {
-            await fetch('https://museo-vivo-backend.marcos-a98.workers.dev/api/guardar-obra', {
+            const res = await fetch('https://museo-vivo-backend.marcos-a98.workers.dev/api/guardar-obra', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ usuario_id: usuarioId, contenido })
             });
-            alert('Obra guardada!');
+            const data = await res.json();
+            alert(data.mensaje || 'Obra guardada!');
         } catch (e) {
             alert('Error al guardar la obra.');
         }
     });
+
+    // Cargar usuarios en consola (para debug)
+    async function cargarUsuarios() {
+        try {
+            const res = await fetch('https://museo-vivo-backend.marcos-a98.workers.dev/api/usuarios');
+            const data = await res.json();
+            console.log('Usuarios:', data); // Mira en F12 > Console
+        } catch (e) {
+            console.log('Error al cargar usuarios:', e);
+        }
+    }
+    cargarUsuarios();
 });
