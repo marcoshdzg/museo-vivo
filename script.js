@@ -17,7 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
     iniciarBtn.addEventListener('click', async () => {
         const tipo = document.getElementById('tipo-dinamica').value;
         try {
-            const res = await fetch('https://museo-vivo-backend.marcos-a98.workers.dev/api/dinamica');
+            const res = await fetch('https://museo-vivo-backend.marcos-a98.workers.dev/api/dinamica', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tipo })
+            });
             const data = await res.json();
             dinamicaResult.innerHTML = `<div class="tarjeta"><h3>${data.tipo}</h3><p>${data.instrucciones}</p></div>`;
         } catch (e) {
@@ -25,14 +29,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    async function cargarUsuarios() {
+    // Ejemplo de guardar obra (botón manual por ahora)
+    document.getElementById('crear').addEventListener('click', async () => {
+        const usuarioId = 'algún-id-de-usuario'; // Reemplazar con lógica real
+        const contenido = { titulo: 'Nueva Obra', desc: 'Creada ahora' };
         try {
-            const res = await fetch('https://museo-vivo-backend.marcos-a98.workers.dev/api/usuarios');
-            const data = await res.json();
-            console.log('Usuarios:', data);
+            await fetch('https://museo-vivo-backend.marcos-a98.workers.dev/api/guardar-obra', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_id: usuarioId, contenido })
+            });
+            alert('Obra guardada!');
         } catch (e) {
-            console.log('Error al cargar usuarios:', e);
+            alert('Error al guardar la obra.');
         }
-    }
-    cargarUsuarios();
+    });
 });
